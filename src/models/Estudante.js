@@ -16,6 +16,13 @@ export const Estudante = mongoose.model(
       default: "default value",
       unique: true,
     },
+    languages: {
+      type: Array,
+      default: ["Português"],
+      items: {
+        type: String,
+      },
+    },
     email: {
       type: String,
       default: "default value",

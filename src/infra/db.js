@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 // Connection with mongoDB
 export const connectDB = async () => {
   try {
