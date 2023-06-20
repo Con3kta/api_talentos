@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import { connectDB } from "./infra/db.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -23,7 +24,8 @@ app.use(
     extended: true,
   })
 );
-
+//Connecting whit the database
+connectDB();
 app.get("/", async (req, res) => {
   res.status(200).send({ message: "API is ready to go!" });
 });
