@@ -31,5 +31,5 @@ app.get("/", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`API ready to use in -> http://localhost:${PORT}`);
+  console.log(`API ready to use in -> https://api-talentos.onrender.com/`);
 });
