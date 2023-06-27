@@ -87,4 +87,47 @@ export const verificationRoutes = (app) => {
     } catch (error) { res.send(error.message) }
   })
 
+  app.post("/change_password_part1", async (req, res) => {
+    try{
+      const email = req.body.email
+  
+      // procura no banco de dados se o usuario existe
+      const exist = await Student.findOne({ email: email }).count()
+      
+      if (exist == 1) { // verifica se algum usuario foi encontrado
+        // funcao q enviao o codigo para o email
+        const verification = await client.verify.v2.services(verifySid)
+        .verifications.create({
+          channelConfiguration: {
+            template_id: 'd-0fcd8d7ac1ef41b4a7bd948e5fa04f3f',
+            from: 'teamcon3kta@gmail.com',
+            from_name: 'Con3kta'
+          }, to: email, channel: 'email'
+        })
+        res.status(200).send({ message: "confirmation code sent to email box" })
+      } else if (exist == 0) { // verifica se algum usuario foi encontrado
+        res.status(404).send({ message: "Email not registered" })
+      }
+      
+    } catch (error) { res.status(500).send(error) }
+  })
+  
+  app.post("/change_password_part2", async (req, res) => {
+    try{
+      const otpCode = req.body.code
+      const email = req.body.email
+      const newPassword = req.body.newPassword
+  
+      const verification_check = await client.verify.v2.services(verifySid).verificationChecks.create({ to: email, code: otpCode })
+      
+      if (verification_check.status == "approved") { // verificacao se o codigo esta certo
+        const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
+        res.status(202).send({ message: "Successfully changed password" })
+      } else {
+        res.status(400).send({ message: "Incorrect verification code" })
+      }
+      
+    } catch (error) { res.status(500).send(error) }
+  })
+
 }
