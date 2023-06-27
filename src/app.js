@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./infra/db.js";
 
 import { verificationRoutes } from "./routes/verificationRoutes.js";
+import { admRoutes } from "./routes/admRoutes.js";
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -35,6 +36,7 @@ app.get("/", async (req, res) => {
 
 // Routes
 verificationRoutes(app)
+admRoutes(app)
 
 app.listen(PORT, () => {
   console.log(`API ready to use in -> https://api-talentos.onrender.com/`);
