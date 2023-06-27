@@ -121,8 +121,14 @@ export const verificationRoutes = (app) => {
       const verification_check = await client.verify.v2.services(verifySid).verificationChecks.create({ to: email, code: otpCode })
       
       if (verification_check.status == "approved") { // verificacao se o codigo esta certo
-        const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
-        res.status(202).send({ message: "Successfully changed password" })
+        const userPassword = await Student.findOne({ email: email })
+
+        if (userPassword.password == newPassword) {
+          res.status(409).send({ message: "New password same as old" })
+        } else {
+          const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
+          res.status(202).send({ message: "Successfully changed password" })
+        }
       } else {
         res.status(401).send({ message: "Incorrect verification code" })
       }
