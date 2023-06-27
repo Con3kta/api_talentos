@@ -44,7 +44,7 @@ status(500): Unexpected server error
 | `email`      | `string` | **Obrigatório**. Email do usuário. |
 | `newPassword`      | `string` | **Obrigatório**. Nova senha do usuário. |
 
-#### Retorna 3 possíveis respostas:
+#### Retorna 4 possíveis respostas:
 
 status(202): 
 ```json
@@ -58,6 +58,14 @@ status(401):
 ```json
 "data": {
   "message": "Incorrect verification code"
+}
+```
+<br/>
+
+status(409): 
+```json
+"data": {
+  "message": "New password same as old"
 }
 ```
 <br/>
