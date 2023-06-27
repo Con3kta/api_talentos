@@ -1,6 +1,4 @@
 import twilio from "twilio"
-import sgMail from '@sendgrid/mail';
-import express from "express";
 import { Student } from "../models/Student.js";
 
 export const verificationRoutes = (app) => {
@@ -55,17 +53,38 @@ export const verificationRoutes = (app) => {
         console.log(`Email salvo como um Email verificado: ${savedStudent}`)
         res.send({ message: `Email salvo como um Email verificado: ${savedStudent}` })
       } else {
-        console.log(`Email não verificado: bad ending`)
-        res.send({ message: `Email não verificado` })
+        console.log(`Código por email não verificado: tente novamente.`)
+        res.send({ message: `Código por email não verificado: tente novamente.` })
       }
     } catch (error) { res.send(error.message) }
   })
 
-app.post("/register_main", async (req, res) => {
-  try{
-    
-  } catch (error) {
+  // atentar que algumas propriedades sao array
+  app.post("/register", async (req, res) => {
+    try {
+      const email = req.body.email
+      const data = req.body
+      const selectedStudent = await Student.findOne({ email: email })
+      // caso o email exista e seja verificado:
+        if (selectedStudent) {
+          if (selectedStudent.verifiedUser === true) {
+            const newStudent = await Student.findOneAndUpdate(
+              // selecionando email
+              { email: email },
+              // inserindo os dados
+              { ...data },
+              { new: true }
+            )
+            const savedStudent = await newStudent.save()
+            console.log(`Registro de dados completo com sucesso: ${savedStudent}`)
+            res.send({ message: `Registro de dados completo com sucesso: ${savedStudent}` })
+          } else if (selectedStudent.verifiedUser === false) {
+            res.send({ message: "Email não verificado: abortar cadastro" });
+          }
+        } else {
+          res.send({ message: "Email não encontrado" });
+        }
+    } catch (error) { res.send(error.message) }
+  })
 
-  }
-})
 }
