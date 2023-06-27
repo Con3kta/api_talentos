@@ -54,7 +54,7 @@ status(202):
 ```
 <br/>
 
-status(400): 
+status(401): 
 ```json
 "data": {
   "message": "Incorrect verification code"
