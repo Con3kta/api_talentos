@@ -124,7 +124,7 @@ export const verificationRoutes = (app) => {
         const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
         res.status(202).send({ message: "Successfully changed password" })
       } else {
-        res.status(400).send({ message: "Incorrect verification code" })
+        res.status(401).send({ message: "Incorrect verification code" })
       }
       
     } catch (error) { res.status(500).send(error) }
