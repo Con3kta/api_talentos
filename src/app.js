@@ -1,10 +1,13 @@
 import express from "express";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import { connectDB } from "./infra/db.js";
 
-dotenv.config();
+import { verificationRoutes } from "./routes/verificationRoutes.js";
+
+import dotenv from "dotenv"
+dotenv.config()
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
@@ -24,11 +27,14 @@ app.use(
     extended: true,
   })
 );
-//Connecting whit the database
+//Connecting whith the database
 connectDB();
 app.get("/", async (req, res) => {
   res.status(200).send({ message: "API is ready to go!" });
 });
+
+// Routes
+verificationRoutes(app)
 
 app.listen(PORT, () => {
   console.log(`API ready to use in -> https://api-talentos.onrender.com/`);
