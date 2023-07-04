@@ -122,33 +122,53 @@ status(500): Unexpected server error
 
 ## Adm Routes
 
-## Parâmetros necessários:
-
-Todas as rotas com ``/:property`` necessitam obrigatoriamente de:
-
-| Propriedade   | Tipo       | Campo | Descrição                                   |
-| :---------- | :--------- |  :--------- | :------------------------------------------ |
-| `property`      | `string` | Parâmetro de url | Nome da propriedade a ser selecionada. |
-| `target`      | `string` | Corpo da requisição  |Valor da propriedade a ser selecionada. |
-
-## Resposta da rota:
+## Respostas da rotas:
 
 Todas as rotas retornarão um objeto com as seguintes propriedades:
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `query`      | `object` | Consulta realizada. |
+| `query`      | `object` | Estudante(s) selecionado(s) |
 | `quantity`      | `integer` |  Quantidade de estudante(s) selecionado(s). |
-| `message`      | `string` |  Mensagem indicando o sucesso ou parâmetro(s) incorretos. |
+| `message`      | `string` |  Mensagem indicando o sucesso ou parâmetro(s) incorreto(s). |
 | `response`      | `array` |  Objeto(s) dos estudante(s) selecionados. |
+
+`message` retorna 4 possíveis respostas:
+
+```
+"Sucesso"
+```
+
+```
+"Nenhum estudante encontrado"
+```
+
+```
+"Nome de propriedade inexistente"
+```
+
+```
+"Acesso negado"
+```
 
 Obs.: Exceção onde a rota não retornará um objeto com essas propriedades: Erro capturado pelo try-catch.
 
 ### Editar estudante
-
 ```http
   PATCH /edit_student/:property
 ```
+#### Parâmetro(s) necessário(s):
+
+| Body   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `propriety`                        | `object` | **Obrigatório:** Valor da propriedade selecionada. |
+| `propriedade a ser editada 1`      | `any` | valor da propriedade 1 |
+| `propriedade a ser editada 2`      | `any` | valor da propriedade 2|
+| `propriedade a ser editada 3`      | `any` | valor da propriedade 3|
+| `. . .`      | `. . .` | . . . |
+
+
+Obs.: Nessa rota você pode editar quantos e quaisquer propriedades do(s) Estudante(s).
 
 ### Obter todos os estudantes
 
@@ -157,16 +177,28 @@ Obs.: Exceção onde a rota não retornará um objeto com essas propriedades: Er
 ```
 
 ### Obter apenas um estudante
-
 ```http
   GET /search_student/:property
 ```
+#### Parâmetro(s) necessário(s):
+
+| Body   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `propriety`                        | `object` | **Obrigatório:** Valor da propriedade selecionada. |
+
+
 
 ### Apagar um estudante
-
 ```http
   DELETE /delete_student/:property
 ```
+#### Parâmetro(s) necessário(s):
+
+| Body   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `propriety`                        | `object` | **Obrigatório:** Valor da propriedade selecionada. |
+
+
 
 ### Registrar um estudante (sem precisar verificar o email)
 Obs.: só use essa rota para fins de desenvolvimento e preencha todas as propriedades para evitar problemas ao usar o documento desse objeto.
@@ -174,6 +206,8 @@ Obs.: só use essa rota para fins de desenvolvimento e preencha todas as proprie
 ```http
   POST /raw_register
 ```
+
+Todas as propriedades do Schema Student:
 
 Body           | Tipo        | Descrição
 ---------------|-------------|----------------------------------------------
