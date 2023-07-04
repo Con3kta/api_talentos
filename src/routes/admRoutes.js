@@ -1,18 +1,14 @@
-// rascunho: só falta otimizar os returns pra nao ter que repetir o objeto inteiro toda vez em cada return e sim somente as propriedades necessarias
-
-import twilio from "twilio"
 import { Student } from "../models/Student.js";
 
 export const admRoutes = (app) => {
-
+    let message
     async function functionSelectStudent(property, target) {
         let query = {}
         query[property] = target
 
         const student = await Student.find(query)
         const quantity = student.length
-        let message
-
+        
         if (!Student.schema.obj
             .hasOwnProperty(property)) {
             message = "Nome de propriedade inexistente"
@@ -26,7 +22,6 @@ export const admRoutes = (app) => {
                 message = "Nenhum estudante encontrado"
             }
         }
-
         return { query: query, quantity: quantity, message: message, response: student }
     }
 
@@ -102,6 +97,24 @@ export const admRoutes = (app) => {
             const response = await functionDeleteStudent(
                 selectedStudent
             )
+            res.status(200).send(response)
+        } catch (error) { res.json(error.message) }
+    })
+
+    app.post("/raw_register", async (req, res) => {
+        const data = req.body
+        const quantity = data.length
+        let message
+        let createdStudent
+        try {
+            if (quantity == 1) {
+                const creatingStudent = new Student(data[0])
+                createdStudent = await creatingStudent.save()
+            } else {
+                createdStudent = await Student.insertMany(data)
+            }
+            message = "success"
+            const response = { query: "raw registering", quantity: quantity, message: message, response: createdStudent }
             res.status(200).send(response)
         } catch (error) { res.json(error.message) }
     })
