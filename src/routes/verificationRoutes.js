@@ -29,7 +29,10 @@ export const verificationRoutes = (app) => {
           })
         const verificationStatus = verification.status
         console.log(`verification.status: ${verificationStatus}`)
-        res.status(202).json({ message: "email inserido é novo: code-email ENVIADO com sucesso", verificationStatus })
+        res.status(202).json({
+          message: "email inserido é novo: code-email ENVIADO com sucesso",
+          response: verificationStatus
+        })
       }
     } catch (error) { res.send(error.message) }
   })
@@ -53,14 +56,19 @@ export const verificationRoutes = (app) => {
         })
         const savedStudent = await newStudent.save()
 
-        res.status(202).json({ message: `Email salvo como um Email verificado: ${savedStudent}` })
+        res.status(202).json({
+          message: "Email salvo como um Email verificado",
+          response: savedStudent
+        })
       } else {
-        res.status(202).json({ message: `Código por email não verificado: tente novamente.` })
+        res.status(202).json({
+          message: "Código por email não verificado: tente novamente"
+        })
       }
     } catch (error) { res.send(error.message) }
   })
 
-  // atentar que algumas propriedades sao array
+
   app.post("/register", async (req, res) => {
     try {
       const email = req.body.email
@@ -78,7 +86,10 @@ export const verificationRoutes = (app) => {
           )
           const savedStudent = await newStudent.save()
 
-          res.send({ message: `Registro de dados completo com sucesso: ${savedStudent}` })
+          res.send({
+            message: "Registro de dados completo com sucesso",
+            response: savedStudent
+          })
         } else if (selectedStudent.verifiedUser === false) {
           res.send({ message: "Email não verificado: abortar cadastro" });
         }
@@ -105,9 +116,9 @@ export const verificationRoutes = (app) => {
               from_name: 'Con3kta'
             }, to: email, channel: 'email'
           })
-        res.status(200).send({ message: "confirmation code sent to email box" })
+        res.status(200).send({ message: "código de verificação enviado para o email" })
       } else if (exist == 0) { // verifica se algum usuario foi encontrado
-        res.status(404).send({ message: "Email not registered" })
+        res.status(404).send({ message: "email não existente" })
       }
 
     } catch (error) { res.status(500).send(error) }
@@ -123,11 +134,10 @@ export const verificationRoutes = (app) => {
 
       if (verification_check.status == "approved") { // verificacao se o codigo esta certo
         const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
-        res.status(202).send({ message: "Successfully changed password" })
+        res.status(202).send({ message: "Senha alterada com sucesso" })
       } else {
-        res.status(401).send({ message: "Incorrect verification code" })
+        res.status(401).send({ message: "Código de verificação incorreto" })
       }
-
     } catch (error) { res.status(500).send(error) }
   })
 
