@@ -27,8 +27,12 @@ export const verificationRoutes = (app) => {
               from_name: 'Con3kta'
             }, to: email, channel: 'email'
           })
-        console.log(`verification.status: ${verification.status}`)
-        res.status(202).send({ "message": "email inserido é novo: code-email ENVIADO com sucesso" })
+        const verificationStatus = verification.status
+        console.log(`verification.status: ${verificationStatus}`)
+        res.status(202).json({
+          message: "email inserido é novo: code-email ENVIADO com sucesso",
+          response: verificationStatus
+        })
       }
     } catch (error) { res.send(error.message) }
   })
@@ -41,98 +45,99 @@ export const verificationRoutes = (app) => {
       const verification_check = await client.verify.v2.services(verifySid)
         .verificationChecks
         .create({ to: email, code: otpCode })
-      console.log(`verification_check.status: ${verification_check.status}`)
+
+      const verificationCheckStatus = verification_check.status
 
       //caso o codigo verificado por email seja aprovado, cria o Student por enquanto apenas com o email:
-      if (verification_check.status == "approved") {
+      if (verificationCheckStatus == "approved") {
         const newStudent = new Student({
           email: email,
           verifiedUser: true
         })
         const savedStudent = await newStudent.save()
-        console.log(`Email salvo como um Email verificado: ${savedStudent}`)
-        res.send({ message: `Email salvo como um Email verificado: ${savedStudent}` })
+
+        res.status(202).json({
+          message: "Email salvo como um Email verificado",
+          response: savedStudent
+        })
       } else {
-        console.log(`Código por email não verificado: tente novamente.`)
-        res.send({ message: `Código por email não verificado: tente novamente.` })
+        res.status(202).json({
+          message: "Código por email não verificado: tente novamente"
+        })
       }
     } catch (error) { res.send(error.message) }
   })
 
-  // atentar que algumas propriedades sao array
+
   app.post("/register", async (req, res) => {
     try {
       const email = req.body.email
       const data = req.body
       const selectedStudent = await Student.findOne({ email: email })
       // caso o email exista e seja verificado:
-        if (selectedStudent) {
-          if (selectedStudent.verifiedUser === true) {
-            const newStudent = await Student.findOneAndUpdate(
-              // selecionando email
-              { email: email },
-              // inserindo os dados
-              { ...data },
-              { new: true }
-            )
-            const savedStudent = await newStudent.save()
-            console.log(`Registro de dados completo com sucesso: ${savedStudent}`)
-            res.send({ message: `Registro de dados completo com sucesso: ${savedStudent}` })
-          } else if (selectedStudent.verifiedUser === false) {
-            res.send({ message: "Email não verificado: abortar cadastro" });
-          }
-        } else {
-          res.send({ message: "Email não encontrado" });
+      if (selectedStudent) {
+        if (selectedStudent.verifiedUser === true) {
+          const newStudent = await Student.findOneAndUpdate(
+            // selecionando email
+            { email: email },
+            // inserindo os dados
+            { ...data },
+            { new: true }
+          )
+          const savedStudent = await newStudent.save()
+
+          res.send({
+            message: "Registro de dados completo com sucesso",
+            response: savedStudent
+          })
+        } else if (selectedStudent.verifiedUser === false) {
+          res.send({ message: "Email não verificado: abortar cadastro" });
         }
+      } else {
+        res.send({ message: "Email não encontrado" });
+      }
     } catch (error) { res.send(error.message) }
   })
 
-  app.post("/change_password_part1", async (req, res) => {
-    try{
+  app.post("/change_password_send", async (req, res) => {
+    try {
       const email = req.body.email
-  
+
       // procura no banco de dados se o usuario existe
       const exist = await Student.findOne({ email: email }).count()
-      
+
       if (exist == 1) { // verifica se algum usuario foi encontrado
-        // funcao q enviao o codigo para o email
+        // funcao que envia o codigo para o email
         const verification = await client.verify.v2.services(verifySid)
-        .verifications.create({
-          channelConfiguration: {
-            template_id: 'd-0fcd8d7ac1ef41b4a7bd948e5fa04f3f',
-            from: 'teamcon3kta@gmail.com',
-            from_name: 'Con3kta'
-          }, to: email, channel: 'email'
-        })
-        res.status(200).send({ message: "confirmation code sent to email box" })
+          .verifications.create({
+            channelConfiguration: {
+              template_id: 'd-0fcd8d7ac1ef41b4a7bd948e5fa04f3f',
+              from: 'teamcon3kta@gmail.com',
+              from_name: 'Con3kta'
+            }, to: email, channel: 'email'
+          })
+        res.status(200).send({ message: "código de verificação enviado para o email" })
       } else if (exist == 0) { // verifica se algum usuario foi encontrado
-        res.status(404).send({ message: "Email not registered" })
+        res.status(404).send({ message: "email não existente" })
       }
-      
+
     } catch (error) { res.status(500).send(error) }
   })
-  
-  app.post("/change_password_part2", async (req, res) => {
-    try{
+
+  app.post("/change_password_check", async (req, res) => {
+    try {
       const otpCode = req.body.code
       const email = req.body.email
       const newPassword = req.body.newPassword
-  
-      const verification_check = await client.verify.v2.services(verifySid).verificationChecks.create({ to: email, code: otpCode })
-      
-      if (verification_check.status == "approved") { // verificacao se o codigo esta certo
-        const userPassword = await Student.findOne({ email: email })
 
-        if (userPassword.password == newPassword) {
-          res.status(409).send({ message: "New password same as old" })
-        } else {
-          const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
-          res.status(202).send({ message: "Successfully changed password" })
-        }
+      const verification_check = await client.verify.v2.services(verifySid).verificationChecks.create({ to: email, code: otpCode })
+
+      if (verification_check.status == "approved") { // verificacao se o codigo esta certo
+        const user = await Student.updateOne({ email: email }, { $set: { password: newPassword } })
+        res.status(202).send({ message: "Senha alterada com sucesso" })
       } else {
-        res.status(401).send({ message: "Incorrect verification code" })
+        res.status(401).send({ message: "Código de verificação incorreto" })
       }
-      
     } catch (error) { res.status(500).send(error) }
   })
 

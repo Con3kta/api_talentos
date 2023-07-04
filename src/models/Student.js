@@ -1,96 +1,102 @@
 import mongoose from "mongoose";
+//se der problema: bote "default: 'default value' " em todas as propriedades
 
 const studentSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      default: "default value",
-      unique: true,
+      unique: true
     },
+
     password: {
-      type: String,
-      default: "default value",
+      type: String
     },
+
     verifiedUser: {
       type: Boolean,
       default: false
     },
+
     name: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     lastName: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     github: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     linkedin: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     about: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     location: {
-      type: String,
-      default: "default value"
+      type: String
     },
+
     birth_date: {
-      type: Date,
-      default: Date.now(),
+      type: Date
     },
+
     gender: {
-      type: String,
-      default: "default"
+      type: String
     },
+
     phone: {
       type: String,
-      default: "default value",
       unique: true
     },
+
     languages: {
       type: Array,
       default: ["Português"],
       items: {
-        type: String,
-      },
+        type: String
+      }
     },
+
     photo: {
-      type: String,
-      default: "default value",
+      type: String
     },
+
     scholar: {
       type: Array,
       default: [],
       items: {
-        type: Object,
-      },
+        type: Object
+      }
     },
+
     experience: {
       type: Array,
       default: [],
       items: {
-        type: Object,
-      },
+        type: Object
+      }
     },
+
     projects: {
       type: Array,
       default: [],
       items: {
-        type: Object,
-      },
+        type: Object
+      }
     },
+
     skills: {
       type: Array,
       default: [],
       items: {
-        type: String,
-      },
-    },
+        type: String
+      }
+    }
   })
 
 export const Student = mongoose.model('Student', studentSchema)
