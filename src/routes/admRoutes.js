@@ -2,12 +2,14 @@ import { Student } from "../models/Student.js";
 
 export const admRoutes = (app) => {
     let message
-    async function functionSelectStudent(property, target) {
-        let query = {}
-        query[property] = target
+    
+    async function functionSelectStudent(body) {
+        let property = Object.keys(body)[0]
+        let target = body[property]
+        let query = {[property]: target}
 
-        const student = await Student.find(query)
-        const quantity = student.length
+        const foundStudent = await Student.find(query)
+        const quantity = foundStudent.length
         
         if (!Student.schema.obj
             .hasOwnProperty(property)) {
@@ -22,10 +24,13 @@ export const admRoutes = (app) => {
                 message = "Nenhum estudante encontrado"
             }
         }
-        return { query: query, quantity: quantity, message: message, response: student }
+        return { query: query, quantity: quantity, message: message, response: foundStudent }
     }
 
-    async function functionEditStudent(query, data) {
+    async function functionEditStudent(query, body) {
+        const entries = Object.entries(body)
+        const data = Object.fromEntries(entries.slice(1))
+
         if (query.quantity > 1) {
             await Student.updateMany(
                 query.query,
@@ -55,45 +60,31 @@ export const admRoutes = (app) => {
         return query
     }
 
-    app.patch("/edit_student/:property", async (req, res) => {
+    app.patch("/edit_student", async (req, res) => {
         try {
-            const selectedStudent = await functionSelectStudent(
-                req.params.property,
-                req.body.target
-            )
-            const response = await functionEditStudent(
-                selectedStudent,
-                req.body
-            )
+            const selectedStudent = await functionSelectStudent(req.body)
+            const response = await functionEditStudent(selectedStudent, req.body)
             res.status(200).send(response)
         } catch (error) { res.json(error.message) }
     })
 
     app.get("/all_students", async (req, res) => {
         try {
-            const response = await functionSelectStudent(
-                "verifiedUser",
-                "true"
-            )
+            const response = await functionSelectStudent( {"verifiedUser": "true"} )
             res.status(200).send(response)
         } catch (error) { res.json(error.message) }
     })
 
-    app.get("/search_student/:property", async (req, res) => {
+    app.get("/search_student", async (req, res) => {
         try {
-            const response = await functionSelectStudent(
-                req.params.property,
-                req.body.target)
+            const response = await functionSelectStudent(req.body)
             res.status(200).json(response)
         } catch (error) { res.json(error.message) }
     })
 
-    app.delete("/delete_student/:property", async (req, res) => {
+    app.delete("/delete_student", async (req, res) => {
         try {
-            const selectedStudent = await functionSelectStudent(
-                req.params.property,
-                req.body.target
-            )
+            const selectedStudent = await functionSelectStudent(req.body)
             const response = await functionDeleteStudent(
                 selectedStudent
             )
