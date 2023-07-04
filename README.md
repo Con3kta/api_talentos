@@ -10,14 +10,14 @@
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `email`      | `string` | **Obrigatório**. Email do usuário. |
+| `email`      | `string` | **Obrigatório:** Email do usuário. |
 
 ### Checar código de verificação por email
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `email`      | `string` | **Obrigatório**. Email utilizado anteriormente. |
-| `code`      | `string` | **Obrigatório**. Código recebido nesse email. |
+| `email`      | `string` | **Obrigatório:** Email utilizado anteriormente. |
+| `code`      | `string` | **Obrigatório:** Código recebido nesse email. |
 
 
 ### Registrar usuário
@@ -26,7 +26,7 @@ Obs.: Todas as propriedades nessa rota são opcionais exceto `email`
 
 Body           | Tipo        | Descrição
 ---------------|-------------|----------------------------------------------
-`email`        | `string`    | **Obrigatório**. Email do usuário.
+`email`        | `string`    | **Obrigatório:** Email do usuário.
 `name`         | `string`    | Nome do usuário.
 `lastName`     | `string`    | Sobrenome do usuário.
 `github`       | `string`    | Perfil do GitHub do usuário.
@@ -54,7 +54,7 @@ Body           | Tipo        | Descrição
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `email`      | `string` | **Obrigatório**. Email do usuário. |
+| `email`      | `string` | **Obrigatório:** Email do usuário. |
 
 #### Retorna 3 possíveis respostas:
 
@@ -86,9 +86,9 @@ status(500): Unexpected server error
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `code`      | `string` | **Obrigatório**. Código enviado por e-mail. |
-| `email`      | `string` | **Obrigatório**. Email do usuário. |
-| `newPassword`      | `string` | **Obrigatório**. Nova senha do usuário. |
+| `code`      | `string` | **Obrigatório:** Código enviado por e-mail. |
+| `email`      | `string` | **Obrigatório:** Email do usuário. |
+| `newPassword`      | `string` | **Obrigatório:** Nova senha do usuário. |
 
 #### Retorna 4 possíveis respostas:
 
@@ -155,7 +155,7 @@ Obs.: Exceção onde a rota não retornará um objeto com essas propriedades: Er
 
 ### Editar estudante
 ```http
-  PATCH /edit_student/:property
+  PATCH /edit_student
 ```
 #### Parâmetro(s) necessário(s):
 
@@ -178,7 +178,7 @@ Obs.: Nessa rota você pode editar quantos e quaisquer propriedades do(s) Estuda
 
 ### Obter apenas um estudante
 ```http
-  GET /search_student/:property
+  GET /search_student
 ```
 #### Parâmetro(s) necessário(s):
 
@@ -190,7 +190,7 @@ Obs.: Nessa rota você pode editar quantos e quaisquer propriedades do(s) Estuda
 
 ### Apagar um estudante
 ```http
-  DELETE /delete_student/:property
+  DELETE /delete_student
 ```
 #### Parâmetro(s) necessário(s):
 
