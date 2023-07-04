@@ -195,6 +195,3 @@ Body           | Tipo        | Descrição
 `experience`   | `array`     | Lista de experiências do usuário.
 `projects`     | `array`     | Lista de projetos do usuário.
 `skills`       | `array`     | Lista de habilidades do usuário.
-
-
-
