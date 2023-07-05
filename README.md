@@ -128,27 +128,23 @@ status(500): Unexpected server error
 
 Todas as rotas retornarão um objeto com as seguintes propriedades:
 
-| Body   | Tipo       | Descrição                                   |
-| :---------- | :--------- | :------------------------------------------ |
-| `query`      | `object` | Estudante(s) selecionado(s) |
-| `quantity`      | `integer` |  Quantidade de estudante(s) selecionado(s). |
-| `message`      | `string` |  Mensagem indicando o sucesso ou parâmetro(s) incorreto(s). |
-| `response`      | `array` |  Objeto(s) dos estudante(s) selecionados. |
+| Chave   | Tipo      | Valor possível | Descrição                                   |
+| :---------- | :--------- | :--------- | :------------------------------------------ |
+| `query`      | `object` | "propriedade": "valorPropriedade" | Propriedade selecionada. |
+| `quantity`      | `integer` | 0 ~ N |  Quantidade de estudante(s) selecionado(s). |
+| `message`      | `string` | *"..."* |  Mensagem indicando o sucesso ou parâmetro(s) incorreto(s). |
+| `response`      | `array` | [ *{...}, {...}* ] |  Objeto(s) dos estudante(s) selecionados. |
 
 `message` retorna 4 possíveis respostas:
-
 ```
 "Sucesso"
 ```
-
 ```
 "Nenhum estudante encontrado"
 ```
-
 ```
 "Nome de propriedade inexistente"
 ```
-
 ```
 "Acesso negado"
 ```
