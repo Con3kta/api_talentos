@@ -122,6 +122,8 @@ status(500): Unexpected server error
 
 ## Adm Routes
 
+**ATENÇÃO.:** Em toda rota em que o objeto `property` é obrigatório, o mesmo sempre tem que ser o **PRIMEIRO** no corpo da requisição.
+
 ## Respostas da rotas:
 
 Todas as rotas retornarão um objeto com as seguintes propriedades:
@@ -158,6 +160,8 @@ Obs.: Exceção onde a rota não retornará um objeto com essas propriedades: Er
   PATCH /edit_student
 ```
 #### Parâmetro(s) necessário(s):
+
+
 
 | Body   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
@@ -229,3 +233,22 @@ Body           | Tipo        | Descrição
 `experience`   | `array`     | Lista de experiências do usuário.
 `projects`     | `array`     | Lista de projetos do usuário.
 `skills`       | `array`     | Lista de habilidades do usuário.
+
+## Exemplo de requisição:
+
+```http
+  POST /edit_student
+```
+
+### Corpo da requisição:
+```json
+{
+
+  "name": "João",
+  "location": "Realengo"
+  "about": "Olá, sou o João."
+  "phone": "21999999999"
+
+}
+```
+Todo Estudante com o `name` "João" terá seu `location`, `about` e `phone` editados.
