@@ -46,7 +46,7 @@ Body           | Tipo        | Descrição
 
 
 
-#### Primeira etapa da troca de senha
+### Primeira etapa da troca de senha
 
 ```http
   POST /change_password_send
@@ -56,7 +56,7 @@ Body           | Tipo        | Descrição
 | :---------- | :--------- | :------------------------------------------ |
 | `email`      | `string` | **Obrigatório:** Email do usuário. |
 
-#### Retorna 3 possíveis respostas:
+### Retorna 3 possíveis respostas:
 
 status(200): 
 ```json
@@ -78,7 +78,7 @@ status(500): Unexpected server error
 
 #
 
-#### Segunda etapa da troca de senha
+### Segunda etapa da troca de senha
 
 ```http
   POST /change_password_check
@@ -90,7 +90,7 @@ status(500): Unexpected server error
 | `email`      | `string` | **Obrigatório:** Email do usuário. |
 | `newPassword`      | `string` | **Obrigatório:** Nova senha do usuário. |
 
-#### Retorna 4 possíveis respostas:
+### Retorna 4 possíveis respostas:
 
 status(202): 
 ```json
